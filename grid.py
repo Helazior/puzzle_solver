@@ -8,12 +8,13 @@ class Grid:
         self.matrix = [[0] * 7 for _ in range(7)]
         self.matrix[0][6] = -1
         self.matrix[1][6] = -1
+        self.matrix[6][3] = -1
         self.matrix[6][4] = -1
         self.matrix[6][5] = -1
         self.matrix[6][6] = -1
         # TODO faire avec les dates
-        self.matrix[6][3] = -2
-        self.matrix[0][5] = -2
+        self.matrix[6][2] = -2
+        self.matrix[1][5] = -2
 
     def __str__(self):
         grid_str = f'⬛' * 9 + '\n'

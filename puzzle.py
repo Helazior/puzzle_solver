@@ -12,22 +12,19 @@ def solve(grid, pieces):
     while True:
         #print(grid)
         if not downgrade:
-            is_placed = pieces[(num_piece + shift) % len(pieces)].place(grid)
-        #print(num_piece, shift, pieces[(num_piece + shift) % len(pieces)].position, pieces[(num_piece + shift) % len(pieces)].rotation)
+            is_placed = pieces[num_piece].place(grid)
+        #print(num_piece, shift, pieces[num_piece].position, pieces[num_piece].rotation)
         if not is_placed or downgrade:
             if downgrade:
                 downgrade = False
-            if pieces[(num_piece + shift) % len(pieces)].rotate() == 0:
-                if not pieces[(num_piece + shift) % len(pieces)].next_pos(grid): # Impossible to find a place
+            if pieces[num_piece].rotate() == 0:
+                if not pieces[num_piece].next_pos(grid): # Impossible to find a place
                     num_piece -= 1
                     if num_piece < 0:
-                        num_piece = 0
-                        shift += 1
-                        if shift > len(pieces):
-                            print("End")
-                            return True
+                        print("End")
+                        return True
                     else:
-                        pieces[(num_piece + shift) % len(pieces)].remove(grid)
+                        pieces[num_piece].remove(grid)
                         downgrade = True
 
 
@@ -35,8 +32,7 @@ def solve(grid, pieces):
             num_piece += 1
             if num_piece <= 1:
                 print(grid)
-                print(num_piece, shift, pieces[(num_piece + shift) % len(pieces)].position, pieces[(num_piece + shift) % len(pieces)].rotation)
-            if (num_piece + shift) % len(pieces) == len(pieces):
+            if num_piece >= len(pieces) - 1:
                 print("---------------")
                 print(grid)
 
@@ -48,43 +44,39 @@ def main():
 
     pieces = [
         Piece(get_permutations(
-            [[1, 1, 1, 1],
-             [0, 1, 0, 0]]),
+            [[0, 0, 0, 1],
+             [1, 1, 1, 1]]),
             0),
         Piece(get_permutations(
             [[1, 1, 1],
              [1, 1, 1]]),
             1),
         Piece(get_permutations(
-            [[0, 1, 1],
+            [[1, 0, 0],
+             [1, 0, 0],
              [1, 1, 1]]),
             2),
         Piece(get_permutations(
+            [[1, 1, 1, 1],
+             [0, 1, 0, 0]]),
+            3),
+        Piece(get_permutations(
             [[0, 1, 1],
              [1, 1, 1]]),
-            3),
+            4),
         Piece(get_permutations(
             [[0, 0, 1, 1],
              [1, 1, 1, 0]]),
-            4),
+            5),
         Piece(get_permutations(
             [[1, 0, 1],
              [1, 1, 1]]),
-            5),
-        Piece(get_permutations(
-            [[0, 0, 0, 1],
-             [1, 1, 1, 1]]),
             6),
         Piece(get_permutations(
             [[0, 1, 1],
              [0, 1, 0],
              [1, 1, 0]]),
             7),
-        Piece(get_permutations(
-            [[1, 0, 0],
-             [1, 0, 0],
-             [1, 1, 1]]),
-            8),
     ]
     #piece[4].places(grid, 2, 2)
     #piece[1].rotate()
@@ -92,7 +84,6 @@ def main():
     #print(grid)
 
     solve(grid, pieces)
-
 
 
 
