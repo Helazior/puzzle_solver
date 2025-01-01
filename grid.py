@@ -11,7 +11,7 @@ class Grid:
         self.matrix[6][4] = -1
         self.matrix[6][5] = -1
         self.matrix[6][6] = -1
-
+        # TODO faire avec les dates
         self.matrix[6][3] = -2
         self.matrix[0][5] = -2
 

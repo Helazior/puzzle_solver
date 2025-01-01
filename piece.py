@@ -46,6 +46,7 @@ class Piece:
 
     rotation = 0
     position = [0, 0]
+    placed = False
 
     def __init__(self, frame, number):
         self.frame = frame
@@ -56,16 +57,20 @@ class Piece:
         for j, row in enumerate(self.frame[self.rotation]):
             for i, cell in enumerate(row):
                 if cell:
-                    if x + i < 0 or x + i > len(grid.matrix[0]) or y + j < 0 or y + j > len(grid.matrix):
-                        print(f'Out of grid boundaries: {x + i}, {y + j}')
+                    if x + i < 0 or x + i >= len(grid.matrix[0]) or y + j < 0 or y + j >= len(grid.matrix):
+                        #print(f'Out of grid boundaries: {x + i}, {y + j}')
                         return True  # Out of grid boundaries
-                    print(f'Collision with grid: {x + i}, {y + j}')
+                    #print(f'Collision with grid: {x + i}, {y + j}')
                     if grid.matrix[y + j][x + i] != 0:
-                        print(f'Collision with another piece: {x + i}, {y + j}')
+                        #print(f'Collision with another piece: {x + i}, {y + j}')
                         return True  # Collision with another piece
         return False
 
     def place(self, grid, x=-1, y=-1):
+        if self.placed:
+            print('Piece already placed')
+            return False
+
         if x < 0:
             x, y = self.position
         else:
@@ -78,7 +83,35 @@ class Piece:
             for i, cell in enumerate(row):
                 if cell:
                     grid.matrix[y + j][x + i] = self.number + 1
+        self.placed = True
+        return True
+
+    def remove(self, grid):
+        if not self.placed:
+            return False
+        x, y = self.position
+        for j, row in enumerate(self.frame[self.rotation]):
+            for i, cell in enumerate(row):
+                if cell:
+                    if grid.matrix[y + j][x + i] != self.number + 1:
+                        print(f'Error removing piece: {x + i}, {y + j}')
+                    grid.matrix[y + j][x + i] = 0
+
+        self.placed = False
         return True
 
     def rotate(self):
         self.rotation = (self.rotation + 1) % len(self.frame)
+        return self.rotation
+
+    def next_pos(self, grid):
+        x, y = self.position
+        x += 1
+        if x + len(self.frame[self.rotation][0]) >= len(grid.matrix[0]):
+            x = 0
+            y += 1
+        if y + len(self.frame[self.rotation]) >= len(grid.matrix):
+            self.position = [0, 0]
+            return False
+        self.position = [x, y]
+        return True
