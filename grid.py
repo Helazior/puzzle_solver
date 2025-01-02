@@ -16,6 +16,9 @@ class Grid:
         self.matrix[6][2] = -2
         self.matrix[1][5] = -2
 
+        self.len_x = len(self.matrix[0])
+        self.len_y = len(self.matrix)
+
     def __str__(self):
         grid_str = f'⬛' * 9 + '\n'
         for row in self.matrix:

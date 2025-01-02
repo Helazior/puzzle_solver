@@ -54,16 +54,53 @@ class Piece:
 
     def check_collision_with_grid(self, grid):
         x, y = self.position
+        len_piece_x = len(self.frame[self.rotation][0])
+        len_piece_y = len(self.frame[self.rotation])
+
+        if x + len_piece_x > grid.len_x or y + len_piece_y > grid.len_y:
+            #print(f'Out of grid boundaries: {x + i}, {y + j}')
+            return True  # Out of grid boundaries
+
+        lock_up = False
+        change_lock_up = True
+
         for j, row in enumerate(self.frame[self.rotation]):
             for i, cell in enumerate(row):
-                if cell:
-                    if x + i < 0 or x + i > len(grid.matrix[0]) or y + j < 0 or y + j >= len(grid.matrix):
-                        #print(f'Out of grid boundaries: {x + i}, {y + j}')
-                        return True  # Out of grid boundaries
-                    #print(f'Collision with grid: {x + i}, {y + j}')
+                if cell == 1:
                     if grid.matrix[y + j][x + i] != 0:
                         #print(f'Collision with another piece: {x + i}, {y + j}')
                         return True  # Collision with another piece
+                else:
+                    if grid.matrix[y + j][x + i] == 0:  # Empty cell in the grid
+                        nb_wall = 0
+                        for k in range(-1, 2, 2):
+                            if 0 <= i + k < len_piece_x:  # Next cell is in the piece
+                                nb_wall += 1
+                            else:  # Next cell is out of the piece
+                                if 0 <= x + i + k < grid.len_x:  # Next cell is in the grid
+                                    if grid.matrix[y + j][x + i + k] != 0:  # Next cell is not free in the grid
+                                        nb_wall += 1
+                                else:  # Next cell is out of the grid
+                                    nb_wall += 1
+
+                        for l in range(-1, 2, 2):
+                            if 0 <= j + l < len_piece_y:  # Next cell is in the piece
+                                nb_wall += 1
+                            else:  # Next cell is out of the piece
+                                if 0 <= 0 <= y + j + l < grid.len_y:  # Next cell is in the grid
+                                    if grid.matrix[y + j + l][x + i] != 0:  # Next cell is not free in the grid
+                                        nb_wall += 1
+                                else:  # Next cell is out of the grid
+                                    nb_wall += 1
+
+                        if change_lock_up:
+                            if nb_wall == 4:
+                                lock_up = True
+                            else:
+                                lock_up = False
+                                change_lock_up = False
+        if lock_up:
+            return True
         return False
 
     def place(self, grid, x=-1, y=-1):
@@ -81,7 +118,7 @@ class Piece:
 
         for j, row in enumerate(self.frame[self.rotation]):
             for i, cell in enumerate(row):
-                if cell:
+                if cell == 1:
                     grid.matrix[y + j][x + i] = self.number + 1
         self.placed = True
         return True
@@ -92,12 +129,15 @@ class Piece:
         x, y = self.position
         for j, row in enumerate(self.frame[self.rotation]):
             for i, cell in enumerate(row):
-                if cell:
+                if cell == 1:
                     if grid.matrix[y + j][x + i] != self.number + 1:
-                        print(f'Error removing piece: {x + i}, {y + j}')
+                        print(
+                            f'Error removing piece: {x + i}, {y + j} : {grid.matrix[y + j][x + i]} and {self.number + 1}')
+                        input()
                     grid.matrix[y + j][x + i] = 0
 
         self.placed = False
+        #print('Piece removed')
         return True
 
     def rotate(self):
