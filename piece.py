@@ -57,7 +57,7 @@ class Piece:
         for j, row in enumerate(self.frame[self.rotation]):
             for i, cell in enumerate(row):
                 if cell:
-                    if x + i < 0 or x + i >= len(grid.matrix[0]) or y + j < 0 or y + j >= len(grid.matrix):
+                    if x + i < 0 or x + i > len(grid.matrix[0]) or y + j < 0 or y + j >= len(grid.matrix):
                         #print(f'Out of grid boundaries: {x + i}, {y + j}')
                         return True  # Out of grid boundaries
                     #print(f'Collision with grid: {x + i}, {y + j}')
@@ -107,10 +107,10 @@ class Piece:
     def next_pos(self, grid):
         x, y = self.position
         x += 1
-        if x + len(self.frame[self.rotation][0]) >= len(grid.matrix[0]):
+        if x + len(self.frame[self.rotation][0]) > len(grid.matrix[0]):
             x = 0
             y += 1
-        if y + len(self.frame[self.rotation]) >= len(grid.matrix):
+        if y + len(self.frame[self.rotation]) > len(grid.matrix):
             self.position = [0, 0]
             return False
         self.position = [x, y]

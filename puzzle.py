@@ -18,7 +18,7 @@ def solve(grid, pieces):
             if downgrade:
                 downgrade = False
             if pieces[num_piece].rotate() == 0:
-                if not pieces[num_piece].next_pos(grid): # Impossible to find a place
+                if not pieces[num_piece].next_pos(grid):  # Impossible to find a place
                     num_piece -= 1
                     if num_piece < 0:
                         print("End")
@@ -29,13 +29,15 @@ def solve(grid, pieces):
 
 
         else:
+            if num_piece < 2:
+                print(grid)
             num_piece += 1
-            if num_piece <= 1:
+            if num_piece >= len(pieces):
+                print("-----------------")
                 print(grid)
-            if num_piece >= len(pieces) - 1:
-                print("---------------")
-                print(grid)
-
+                num_piece -= 1
+                pieces[num_piece].remove(grid)
+                downgrade = True
 
 
 def main():
@@ -44,17 +46,17 @@ def main():
 
     pieces = [
         Piece(get_permutations(
-            [[0, 0, 0, 1],
-             [1, 1, 1, 1]]),
-            0),
-        Piece(get_permutations(
             [[1, 1, 1],
              [1, 1, 1]]),
-            1),
+            0),
         Piece(get_permutations(
             [[1, 0, 0],
              [1, 0, 0],
              [1, 1, 1]]),
+            1),
+        Piece(get_permutations(
+            [[0, 0, 0, 1],
+             [1, 1, 1, 1]]),
             2),
         Piece(get_permutations(
             [[1, 1, 1, 1],
@@ -69,13 +71,13 @@ def main():
              [1, 1, 1, 0]]),
             5),
         Piece(get_permutations(
-            [[1, 0, 1],
-             [1, 1, 1]]),
-            6),
-        Piece(get_permutations(
             [[0, 1, 1],
              [0, 1, 0],
              [1, 1, 0]]),
+            6),
+        Piece(get_permutations(
+            [[1, 0, 1],
+             [1, 1, 1]]),
             7),
     ]
     #piece[4].places(grid, 2, 2)
@@ -83,9 +85,12 @@ def main():
     #piece[1].places(grid)
     #print(grid)
 
+    #pieces[0].rotation = 4
+    #pieces[1].position = [2, 2]
+    #pieces[1].rotation = 1
+    #pieces[2].position = [1, 1]
+
     solve(grid, pieces)
-
-
 
 
 if __name__ == "__main__":
