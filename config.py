@@ -1,2 +1,2 @@
-DAY = 1
-MONTH = "jan"
+DAY = 3
+MONTH = 1

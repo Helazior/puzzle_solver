@@ -58,7 +58,7 @@ class Piece:
         len_piece_y = len(self.frame[self.rotation])
 
         if x + len_piece_x > grid.len_x or y + len_piece_y > grid.len_y:
-            #print(f'Out of grid boundaries: {x + i}, {y + j}')
+            #print(f'Piece: {self.number} Out of grid boundaries: {x}, {y}, frame = {len_piece_x}, {len_piece_y}')
             return True  # Out of grid boundaries
 
         lock_up = False
@@ -68,9 +68,9 @@ class Piece:
             for i, cell in enumerate(row):
                 if cell == 1:
                     if grid.matrix[y + j][x + i] != 0:
-                        #print(f'Collision with another piece: {x + i}, {y + j}')
+                        # print(f'{x}, {y} Piece in collision with another piece: {x + i}, {y + j}, rotation = {self.rotation}, frame = {len_piece_x}, {len_piece_y}')
                         return True  # Collision with another piece
-                else:
+                else: # TODO optimize
                     if grid.matrix[y + j][x + i] == 0:  # Empty cell in the grid
                         nb_wall = 0
                         for k in range(-1, 2, 2):
@@ -103,16 +103,12 @@ class Piece:
             return True
         return False
 
-    def place(self, grid, x=-1, y=-1):
+    def place(self, grid):
         if self.placed:
             print('Piece already placed')
             return False
 
-        if x < 0:
-            x, y = self.position
-        else:
-            self.position = [x, y]
-
+        x, y = self.position
         if self.check_collision_with_grid(grid):
             return False
 
@@ -137,7 +133,7 @@ class Piece:
                     grid.matrix[y + j][x + i] = 0
 
         self.placed = False
-        #print('Piece removed')
+        #print(f'Piece {self.number} removed')
         return True
 
     def rotate(self):
@@ -147,10 +143,13 @@ class Piece:
     def next_pos(self, grid):
         x, y = self.position
         x += 1
-        if x + len(self.frame[self.rotation][0]) > len(grid.matrix[0]):
+        #print(f'Next pos: {x}, {y}')
+        min_size = min(len(self.frame[self.rotation][0]), len(self.frame[self.rotation]))
+        if x + min_size > grid.len_x:
+            #print(f'Next pos: Out of grid boundaries: {x + min_size} > {grid.len_x}')
             x = 0
             y += 1
-        if y + len(self.frame[self.rotation]) > len(grid.matrix):
+        if y + min_size > grid.len_y:
             self.position = [0, 0]
             return False
         self.position = [x, y]

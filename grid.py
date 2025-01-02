@@ -13,8 +13,21 @@ class Grid:
         self.matrix[6][5] = -1
         self.matrix[6][6] = -1
         # TODO faire avec les dates
-        self.matrix[6][2] = -2
-        self.matrix[1][5] = -2
+        if not (0 <= month <= 12 and 0 <= day <= 31):
+            print('Invalid date')
+            exit(1)
+
+        self.day = day
+        self.month = month
+
+        i = (month - 1) % 6
+        j = (month - 1) // 6
+        self.matrix[j][i] = -3
+        i = (day - 1) % 7
+        j = (day - 1) // 7
+        self.matrix[j + 2][i] = -2
+        #self.matrix[1][0] = -2
+        #self.matrix[3][5] = -2
 
         self.len_x = len(self.matrix[0])
         self.len_y = len(self.matrix)
@@ -29,7 +42,9 @@ class Grid:
                 elif cell == -1:
                     grid_str += f'⬛'
                 elif cell == -2:
-                    grid_str += f'X '
+                    grid_str += f'{self.day}' + ' ' * (2 - len(str(self.day)))
+                elif cell == -3:
+                    grid_str += f'{self.month}' + ' ' * (2 - len(str(self.month)))
                 elif cell > 0:
                     grid_str += f"{Colors[cell - 1]}⬛{Colors.RESET}"
             grid_str += '⬛\n'
