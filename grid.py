@@ -33,22 +33,22 @@ class Grid:
         self.len_y = len(self.matrix)
 
     def __str__(self):
-        grid_str = f'⬛' * 9 + '\n'
+        grid_str = f'░░' * 9 + '\n'
         for row in self.matrix:
-            grid_str += f'⬛'
+            grid_str += f'░░'
             for cell in row:
                 if cell == 0:
                     grid_str += f'  '
                 elif cell == -1:
-                    grid_str += f'⬛'
+                    grid_str += f'░░'
                 elif cell == -2:
                     grid_str += f'{self.day}' + ' ' * (2 - len(str(self.day)))
                 elif cell == -3:
                     grid_str += f'{self.month}' + ' ' * (2 - len(str(self.month)))
                 elif cell > 0:
-                    grid_str += f"{Colors[cell - 1]}⬛{Colors.RESET}"
-            grid_str += '⬛\n'
-        grid_str += f'⬛' * 9 + '\n'
+                    grid_str += f"{Colors[cell - 1]}██{Colors.RESET}"
+            grid_str += '░░\n'
+        grid_str += f'░░' * 9 + '\n'
         return grid_str
 
     def collision(self, x, y):
